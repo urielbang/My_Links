@@ -1,10 +1,12 @@
-const User = require("../models/users.model");
+const { User } = require("../models/users.model");
+const bcryptjs = require("bcryptjs");
 
 //! Post register
 const register = async (req, res) => {
-  const body = req.body;
+  const { name, password, email } = req.body;
+  const hash = await bcryptjs.hash(password, 10);
   try {
-    const user = new User(body);
+    const user = new User({ name: name, password: hash, email: email });
     await user.save();
 
     return res.send(user);
@@ -17,12 +19,14 @@ const register = async (req, res) => {
 //! Post Login
 const login = async (req, res) => {
   const { email, password } = req.body;
+
   try {
-    const userFound = await User.find({ email: email, password: password });
-    if (userFound.length) {
-      return res.send(`${email} is connected`);
-    } else {
-      return res.send("no user connected");
+    const userFound = await User.findOne({ email: email });
+    if (userFound) {
+      const isMatch = await bcryptjs.compare(password, userFound.password);
+
+      if (isMatch) return res.send(`${email} is connected`);
+      return res.status(401).send("email or password are incorrect");
     }
   } catch (err) {
     console.log(err);
