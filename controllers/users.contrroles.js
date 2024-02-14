@@ -22,15 +22,16 @@ const login = async (req, res) => {
 
   try {
     const userFound = await User.findOne({ email: email });
+
     if (userFound) {
-      const isMatch = await bcryptjs.compare(password, userFound.password);
+      const isMatch = await bcryptjs.compare(userFound.password, password);
 
       if (isMatch) return res.send(`${email} is connected`);
-      return res.status(401).send("email or password are incorrect");
-    }
+      else return res.status(401).send("email or password are incorrect");
+    } else return res.send("no found such email");
   } catch (err) {
     console.log(err);
-    res.send("something wrong");
+    return res.send("something wrong");
   }
 };
 
