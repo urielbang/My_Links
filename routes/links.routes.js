@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const { Link } = require("../models/links.model");
-const { User } = require("../models/users.model");
 
 //! post
 router.post("/", async (req, res) => {
@@ -24,6 +23,17 @@ router.get("/", async (req, res) => {
     return res.send(links);
   } catch (err) {
     console.log(err);
+    res.send("something wrong");
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const link = await Link.findById(id);
+    res.send(link);
+  } catch (error) {
+    console.log(error);
     res.send("something wrong");
   }
 });
