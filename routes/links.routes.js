@@ -15,6 +15,7 @@ router.post("/", async (req, res) => {
     res.send("something wrong");
   }
 });
+
 //! get links and Query
 router.get("/", async (req, res) => {
   try {
@@ -47,6 +48,19 @@ router.delete("/:id", async (req, res) => {
   } catch (error) {
     console.log(error);
     res.send("somhting wrong");
+  }
+});
+
+//! Patch
+router.patch("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const body = await req.body;
+    const link = await Link.findByIdAndUpdate(id, body);
+    return res.send(link);
+  } catch (error) {
+    console.log(error);
+    res.send("now working");
   }
 });
 
