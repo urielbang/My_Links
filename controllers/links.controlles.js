@@ -1,4 +1,4 @@
-const Link = require("../models/links.model");
+const { Link } = require("../models/links.model");
 
 //! post
 const postLink = async (req, res) => {
@@ -30,7 +30,7 @@ const getByQuery = async (req, res) => {
 const getLinkById = async (req, res) => {
   try {
     const { id } = req.params;
-    const link = await Link.findById(id);
+    const link = await Link.findById(id).populate("owner");
     res.send(link);
   } catch (error) {
     console.log(error);

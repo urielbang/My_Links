@@ -24,9 +24,9 @@ const login = async (req, res) => {
     const userFound = await User.findOne({ email: email });
 
     if (userFound) {
-      const isMatch = await bcryptjs.compare(userFound.password, password);
+      const isMatch = await bcryptjs.compare(password, userFound.password);
 
-      if (isMatch) return res.send(`${email} is connected`);
+      if (isMatch) return res.send(userFound);
       else return res.status(401).send("email or password are incorrect");
     } else return res.send("no found such email");
   } catch (err) {
