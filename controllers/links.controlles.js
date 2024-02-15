@@ -5,7 +5,9 @@ const postLink = async (req, res) => {
   const body = req.body;
 
   try {
+    body.owner = req.user.id;
     const link = new Link(body);
+    console.log(req.user);
     await link.save();
     return res.send(link);
   } catch (error) {

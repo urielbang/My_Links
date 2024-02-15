@@ -6,9 +6,10 @@ const {
   deleteLink,
   updateLink,
 } = require("../controllers/links.controlles");
+const { auth } = require("../middlewares/auth");
 const router = express.Router();
 
-router.post("/", postLink);
+router.post("/", auth, postLink);
 
 router.get("/", getByQuery);
 

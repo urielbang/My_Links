@@ -1,5 +1,6 @@
 const { User } = require("../models/users.model");
 const bcryptjs = require("bcryptjs");
+const { genrateToken } = require("../utils/jwt");
 
 //! Post register
 const register = async (req, res) => {
@@ -26,8 +27,14 @@ const login = async (req, res) => {
     if (userFound) {
       const isMatch = await bcryptjs.compare(password, userFound.password);
 
-      if (isMatch) return res.send(userFound);
-      else return res.status(401).send("email or password are incorrect");
+      if (isMatch) {
+        const token = genrateToken({
+          id: userFound._id,
+          email: updateUser.email,
+          role: "admin",
+        });
+        return res.send({ userFound, token });
+      } else return res.status(401).send("email or password are incorrect");
     } else return res.send("no found such email");
   } catch (err) {
     console.log(err);
